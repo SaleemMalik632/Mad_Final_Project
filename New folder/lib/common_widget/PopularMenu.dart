@@ -2,6 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../screens/Vocher.dart';
+import '../screens/Shoes.dart';
+import '../screens/Clothing.dart';
+import '../screens/Mobbile.dart';
+import '../screens/Beauty.dart';
 
 class PopularMenu extends StatelessWidget {
   double width = 55.0, height = 55.0;
@@ -24,16 +28,23 @@ class PopularMenu extends StatelessWidget {
                 decoration: BoxDecoration(
                     shape: BoxShape.circle, color: Color(0xFFF2F3F7)),
                 child: RawMaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Beauty(),
+                      ),
+                    );
+                  },
                   shape: CircleBorder(),
                   child: Icon(
-                    Icons.account_balance,
+                    FontAwesomeIcons.female,
                     color: Color(0xFFAB436B),
                   ),
                 ),
               ),
               Text(
-                "Popular",
+                "Women Fashion",
                 style: TextStyle(
                     color: Color(0xFF969696),
                     fontFamily: 'Roboto-Light.ttf',
@@ -49,41 +60,23 @@ class PopularMenu extends StatelessWidget {
                 decoration: BoxDecoration(
                     shape: BoxShape.circle, color: Color(0xFFF2F3F7)),
                 child: RawMaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Mobile(),
+                      ),
+                    );
+                  },
                   shape: CircleBorder(),
                   child: Icon(
-                    FontAwesomeIcons.clock,
+                    FontAwesomeIcons.mobile,
                     color: Color(0xFFC1A17C),
                   ),
                 ),
               ),
               Text(
-                "Flash Sell",
-                style: TextStyle(
-                    color: Color(0xFF969696),
-                    fontFamily: defaultFontFamily,
-                    fontSize: customFontSize),
-              )
-            ],
-          ),
-          Column(
-            children: <Widget>[
-              Container(
-                width: width,
-                height: height,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: Color(0xFFF2F3F7)),
-                child: RawMaterialButton(
-                  onPressed: () {},
-                  shape: CircleBorder(),
-                  child: Icon(
-                    FontAwesomeIcons.truck,
-                    color: Color(0xFF5EB699),
-                  ),
-                ),
-              ),
-              Text(
-                "Evaly Store",
+                "Mobiles",
                 style: TextStyle(
                     color: Color(0xFF969696),
                     fontFamily: defaultFontFamily,
@@ -103,19 +96,51 @@ class PopularMenu extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => VoucherProvide(),
+                        builder: (context) => ClothingProduct(),
                       ),
                     );
                   },
                   shape: CircleBorder(),
                   child: Icon(
-                    FontAwesomeIcons.gift,
+                    FontAwesomeIcons.tshirt,
+                    color: Color(0xFF5EB699),
+                  ),
+                ),
+              ),
+              Text(
+                "Clothing",
+                style: TextStyle(
+                    color: Color(0xFF969696),
+                    fontFamily: defaultFontFamily,
+                    fontSize: customFontSize),
+              )
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              Container(
+                width: width,
+                height: height,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: Color(0xFFF2F3F7)),
+                child: RawMaterialButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ShoesProducts(),
+                      ),
+                    );
+                  },
+                  shape: CircleBorder(),
+                  child: Icon(
+                    FontAwesomeIcons.shoppingBag,
                     color: Color(0xFF4D9DA7),
                   ),
                 ),
               ),
               Text(
-                "Voucher",
+                "Shoe & Bag",
                 style: TextStyle(
                     color: Color(0xFF969696),
                     fontFamily: defaultFontFamily,

@@ -10,6 +10,7 @@ import './AddProdect.dart';
 import './ShoppingCartScreen.dart';
 import './WishListScreen.dart';
 import './ViewProdect.dart';
+import '../components/AppSignIn.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final dynamic product;
@@ -261,7 +262,7 @@ class MYDraw extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => WishListScreen(),
+                  builder: (context) => ViewProduct(),
                 ),
               );
             },
@@ -270,7 +271,14 @@ class MYDraw extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.delete),
             title: Text('Delete Product'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewProduct(),
+                ),
+              );
+            },
           ),
 
           Divider(),
@@ -282,7 +290,14 @@ class MYDraw extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AppSignIn(),
+                ),
+              );
+            },
           ),
         ],
       ),

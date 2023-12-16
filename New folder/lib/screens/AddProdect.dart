@@ -1,9 +1,11 @@
-// ignore_for_file: use_build_context_synchronously, prefer_const_constructors, non_constant_identifier_names
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors, non_constant_identifier_names, prefer_const_literals_to_create_immutables, prefer_final_fields
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import './DataBaseFunctions.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -16,6 +18,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController CatagoeryController = TextEditingController();
+
   String defaultFontFamily = 'Roboto-Light.ttf';
   double defaultFontSize = 14;
   double defaultIconSize = 17;
@@ -80,15 +84,83 @@ class _AddProductScreenState extends State<AddProductScreen> {
           'ProductName': _nameController.text,
           'Price': _priceController.text,
           'Description': _descriptionController.text,
-          'Image': UploadUrl,
+          'Image':
+              'https://images.pexels.com/photos/788946/pexels-photo-788946.jpeg?auto=compress&cs=tinysrgb&w=600',
+          'status': true,
+          'Catagory': SelectedItem.trim(),
         });
+        _Adding_Data_Using_Sheard_Prefrenes();
+        _Adding_Data_Using_Sqlite();
+        _nameController.clear();
+        _priceController.clear();
+        _descriptionController.clear();
+        _image = null;
+        showAboutDialog(
+          context: context,
+          applicationName: 'Product Added',
+          applicationVersion: '1.0.0',
+          applicationIcon: Icon(Icons.add),
+          children: [
+            Text('Product Added Successfully'),
+          ],
+        );
+      } catch (e) {
+        print('Error adding product: $e');
+      }
+    }
+  }
+
+  Future<void> _Adding_Data_Using_Sqlite() async {
+    // Create a Model instance with the data you want to save
+    Model newProduct = Model(
+      ProdectName: _nameController.text,
+      Price: _priceController.text,
+      Description: _descriptionController.text,
+      Image:
+          'https://media.istockphoto.com/id/1350560575/photo/pair-of-blue-running-sneakers-on-white-background-isolated.jpg?s=612x612&w=0&k=20&c=A3w_a9q3Gz-tWkQL6K00xu7UHdN5LLZefzPDp-wNkSU=',
+    );
+// Create a DbManager instance
+    DbManager dbManager = DbManager();
+    int? result = await dbManager.insertData(newProduct);
+    if (result != null && result > 0) {
+      _nameController.clear();
+      _priceController.clear();
+      _descriptionController.clear();
+      _image = null;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Product added successfully'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to add product'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  Future<void> _Adding_Data_Using_Sheard_Prefrenes() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        if (UploadUrl.isNotEmpty) {
+          print('Uploading file: ${UploadUrl}');
+        }
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('ProductName', _nameController.text);
+        await prefs.setString('Price', _priceController.text);
+        await prefs.setString('Description', _descriptionController.text);
+        await prefs.setString('Image',
+            'https://media.istockphoto.com/id/1350560575/photo/pair-of-blue-running-sneakers-on-white-background-isolated.jpg?s=612x612&w=0&k=20&c=A3w_a9q3Gz-tWkQL6K00xu7UHdN5LLZefzPDp-wNkSU=');
         _nameController.clear();
         _priceController.clear();
         _descriptionController.clear();
         _image = null;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            // ignore: prefer_interpolation_to_compose_strings
             content: Text('Product added successfully'),
             duration: Duration(seconds: 10),
           ),
@@ -212,6 +284,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   return null;
                 },
               ),
+              SizedBox(
+                height: 10,
+              ),
+              DropdownMenuExample(),
+              SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 onPressed: () {
                   pickerandupload();
@@ -229,6 +308,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     ? Image.file(_image!, fit: BoxFit.cover)
                     : Icon(Icons.image, size: 50, color: Colors.grey),
               ),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _addProduct,
                 child: Text('Add Product'),
@@ -237,6 +317,42 @@ class _AddProductScreenState extends State<AddProductScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+const List<String> list = <String>[
+  ' Select Catagory',
+  ' Clothing',
+  ' Shoes',
+  ' Mobbile',
+  ' Beauty',
+];
+var SelectedItem = '';
+
+class DropdownMenuExample extends StatefulWidget {
+  const DropdownMenuExample({super.key});
+  @override
+  State<DropdownMenuExample> createState() => _DropdownMenuExampleState();
+}
+
+class _DropdownMenuExampleState extends State<DropdownMenuExample> {
+  String dropdownValue = list.first;
+  @override
+  Widget build(BuildContext context) {
+    return DropdownMenu<String>(
+      initialSelection: list.first,
+      onSelected: (String? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          dropdownValue = value!;
+          SelectedItem = dropdownValue!;
+        });
+      },
+      dropdownMenuEntries: list.map<DropdownMenuEntry<String>>((String value) {
+        return DropdownMenuEntry<String>(value: value, label: value);
+      }).toList(),
+      width: 350,
     );
   }
 }

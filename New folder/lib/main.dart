@@ -26,5 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: HomeScreen(),
     );
-  }
-}
+  } // MaterialApp
+}   // MyApp
+
+
